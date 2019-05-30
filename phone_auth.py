@@ -9,9 +9,8 @@ TOKEN_URL = "https://api.gotinder.com/v2/auth/login/accountkit"
 HEADERS = {'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_2_5 like Mac OS X) AppleWebKit/604.5.6 (KHTML, like Gecko) Mobile/15D60 AKiOSSDK/4.29.0'}
 
 def sendCode(number):
-    URL = CODE_REQUEST_URL.replace("#placeholder", number)
+    URL = CODE_REQUEST_URL.replace("#placeholder", str(number))
     r = requests.post(URL, headers=HEADERS, verify=False)
-    print(r.url)
     response = r.json()
     if(response.get("login_request_code") == None):
         return False
@@ -19,9 +18,9 @@ def sendCode(number):
         return response["login_request_code"]
 
 def getToken(number, code, req_code):
-    VALIDATE_URL = CODE_VALIDATE_URL.replace("#confirmation_code", code)
-    VALIDATE_URL = VALIDATE_URL.replace("#phone_number", number)
-    VALIDATE_URL = VALIDATE_URL.replace("#request_code", req_code)
+    VALIDATE_URL = CODE_VALIDATE_URL.replace("#confirmation_code", str(code))
+    VALIDATE_URL = VALIDATE_URL.replace("#phone_number", str(number))
+    VALIDATE_URL = VALIDATE_URL.replace("#request_code", str(req_code))
     r_validate = requests.post(VALIDATE_URL, headers=HEADERS, verify=False)
     validate_response = r_validate.json()
     access_token = validate_response["access_token"]
